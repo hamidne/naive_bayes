@@ -5,23 +5,34 @@ import (
 	"regexp"
 )
 
+func getTrainData() []string {
+	// TODO: Load From File
+
+	var train []string
+
+	train = append(train, "a tehran iran tehran tehran iran")
+	train = append(train, "a isfahan iran isfahan")
+	train = append(train, "a iran shiraz fars")
+	train = append(train, "b fars isfahan shiraz")
+
+	return train
+}
+
 func main() {
-	var train [4]string
 
-	train[0] = "a tehran iran tehran tehran iran"
-	train[1] = "a isfahan iran isfahan"
-	train[2] = "a iran shiraz fars"
-	train[3] = "b fars isfahan shiraz"
+	var regex = regexp.MustCompile(`(?m) \w+`)
 
+	points := make(map[byte]float32)
 	processedData := make(map[byte]map[string]byte)
 
 	var allItems []string
-	var regex = regexp.MustCompile(`(?m) \w+`)
 
-	for _, train := range train {
+	for _, train := range getTrainData() {
 
-		class := []byte(train[0:1])[0]
 		data := train[1:]
+		class := []byte(train[0:1])[0]
+
+		points[class]++
 
 		if len(processedData[class]) == 0 {
 			processedData[class] = map[string]byte{}
@@ -33,13 +44,14 @@ func main() {
 		}
 	}
 
+	fmt.Println(points)
 	fmt.Println(processedData)
 
 	var test = " " + "iran isfahan shiraz tehran"
 
 	for _, match := range regex.FindAllString(test, -1) {
 		var point float32 = 1
-		for class, _ := range processedData {
+		for class := range processedData {
 			fmt.Println(match, float32(processedData[class][match]+1)/12)
 			point *= float32(processedData[class][match]+1) / 12
 		}
