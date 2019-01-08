@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"regexp"
-	//"regexp"
 )
 
 func main() {
@@ -16,24 +15,36 @@ func main() {
 
 	processedData := make(map[byte]map[string]byte)
 
-	classes := []byte{'a', 'b'}
-	for _, class := range classes {
-		processedData[class] = map[string]byte{}
-	}
+	var allItems []string
+	var regex = regexp.MustCompile(`(?m) \w+`)
 
 	for _, train := range train {
+
 		class := []byte(train[0:1])[0]
 		data := train[1:]
 
-		var re = regexp.MustCompile(`(?m) \w+`)
+		if len(processedData[class]) == 0 {
+			processedData[class] = map[string]byte{}
+		}
 
-		for _, match := range re.FindAllString(data, -1) {
+		for _, match := range regex.FindAllString(data, -1) {
 			processedData[class][match]++
+			allItems = append(allItems, match)
 		}
 	}
 
 	fmt.Println(processedData)
 
-	//var test = "iran isfahan shiraz tehran"
+	var test = " " + "iran isfahan shiraz tehran"
+
+	for _, match := range regex.FindAllString(test, -1) {
+		var point float32 = 1
+		for class, _ := range processedData {
+			fmt.Println(match, float32(processedData[class][match]+1)/12)
+			point *= float32(processedData[class][match]+1) / 12
+		}
+		fmt.Println(point)
+	}
+
 	//fmt.Println(test)
 }
