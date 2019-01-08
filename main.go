@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"regexp"
+)
 
 func main() {
 	var train [4]string
@@ -10,14 +13,17 @@ func main() {
 	train[2] = "a iran shiraz fars"
 	train[3] = "b fars isfahan shiraz"
 
-	var test = "iran isfahan shiraz tehran"
-
 	for _, train := range train {
-		fmt.Println("original : ", train)
-		fmt.Println("class : ", train[0:1])
-		fmt.Println("data : ", train[2:])
-		fmt.Println()
+		class := train[0:1]
+		data := train[1:]
+
+		var re = regexp.MustCompile(`(?m) \w+`)
+
+		for _, match := range re.FindAllString(data, -1) {
+			fmt.Println(class, " : ", match)
+		}
 	}
 
-	fmt.Println(test)
+	//var test = "iran isfahan shiraz tehran"
+	//fmt.Println(test)
 }
