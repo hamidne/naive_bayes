@@ -23,12 +23,13 @@ func main() {
 	var regex = regexp.MustCompile(`(?m) \w+`)
 
 	cityCount := make(map[byte]int)
+	uniqueCity := make(map[string]bool)
 	classCount := make(map[byte]float32)
 	processedData := make(map[byte]map[string]byte)
 
-	uniqueCity := make(map[string]bool)
+	trainData := getTrainData()
 
-	for _, train := range getTrainData() {
+	for _, train := range trainData {
 
 		class := []byte(train[0:1])[0]
 		classCount[class]++
@@ -44,19 +45,16 @@ func main() {
 		}
 	}
 
-	fmt.Println(uniqueCity)
-	fmt.Println(cityCount)
-	fmt.Println(processedData)
-
 	var test = " " + "iran isfahan shiraz tehran"
 
 	for _, match := range regex.FindAllString(test, -1) {
 		for class := range processedData {
-			fmt.Println(processedData[class][match], processedData[class][match]+1)
-			fmt.Println(len(uniqueCity), cityCount[class])
-			fmt.Println(float32(processedData[class][match]+1) / float32(len(uniqueCity)+cityCount[class]))
 			classCount[class] *= float32(processedData[class][match]+1) / float32(len(uniqueCity)+cityCount[class])
 		}
+	}
+
+	for class := range processedData {
+		fmt.Println(class, classCount[class]/float32(len(trainData)))
 	}
 
 }
