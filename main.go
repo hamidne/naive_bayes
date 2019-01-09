@@ -1,19 +1,30 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
 	"regexp"
 )
 
 func getTrainData() []string {
-	// TODO: Load From File
-
 	var train []string
+	file, err := os.Open("./input.txt")
 
-	train = append(train, "a tehran iran tehran tehran iran")
-	train = append(train, "a isfahan iran isfahan")
-	train = append(train, "a iran shiraz fars")
-	train = append(train, "b fars isfahan shiraz")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		train = append(train, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
+	}
 
 	return train
 }
@@ -45,7 +56,7 @@ func main() {
 		}
 	}
 
-	var test = " " + "iran isfahan shiraz tehran"
+	var test = " Chinese Chinese Chinese Tokyo Japan"
 
 	for _, match := range regex.FindAllString(test, -1) {
 		for class := range processedData {
