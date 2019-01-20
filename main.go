@@ -8,41 +8,14 @@ import (
 	"regexp"
 )
 
-func naiveBaise(data []string, test string) map[byte]float32 {
+func mapSum(mapArray map[string]byte) byte {
+	var sum byte
 
-	classCount := make(map[byte]byte)
-	itemCount := make(map[string]byte)
-	regex := regexp.MustCompile(`(?m) \w+`)
-	processedData := make(map[byte]map[string]byte)
-
-	for _, train := range data {
-
-		class := []byte(train[0:1])[0]
-		classCount[class]++
-
-		if len(processedData[class]) == 0 {
-			processedData[class] = map[string]byte{}
-		}
-
-		for _, match := range regex.FindAllString(train[1:], -1) {
-			itemCount[match]++
-			processedData[class][match]++
-		}
+	for _, count := range mapArray {
+		sum += count
 	}
 
-	result := make(map[byte]float32)
-
-	for _, match := range regex.FindAllString(test, -1) {
-		for class := range processedData {
-			classCount[class] *= float32(processedData[class][match]+1) / float32(len(uniqueCity)+cityCount[class])
-		}
-	}
-
-	for class := range processedData {
-		fmt.Println(string(class), classCount[class]/float32(len(data)))
-	}
-
-	return result
+	return sum
 }
 
 func getData() []string {
@@ -67,13 +40,46 @@ func getData() []string {
 	return train
 }
 
+func naiveBasie(data []string, test string) map[byte]float32 {
+
+	classCount := make(map[byte]byte)
+	itemCount := make(map[string]byte)
+	uniqeItems := make(map[string]bool)
+	regex := regexp.MustCompile(`(?m) \w+`)
+	processedData := make(map[byte]map[string]byte)
+
+	for _, train := range data {
+
+		class := []byte(train[0:1])[0]
+		classCount[class]++
+
+		if len(processedData[class]) == 0 {
+			processedData[class] = map[string]byte{}
+		}
+
+		for _, match := range regex.FindAllString(train[1:], -1) {
+			itemCount[match]++
+			uniqeItems[match] = true
+			processedData[class][match]++
+		}
+	}
+
+	fmt.Println(processedData)
+	result := make(map[byte]float32)
+
+	for nameC, countC := range classCount {
+		result[nameC] = float32(countC) / float32(len(data))
+		for _, nameI := range regex.FindAllString(test, -1) {
+			result[nameC] *= float32(processedData[nameC][nameI]+1) / float32(mapSum(processedData[nameC])+byte(len(uniqeItems)))
+		}
+	}
+
+	return result
+}
+
 func main() {
 
-	uniqueCity := make(map[string]bool)
-	classCount := make(map[byte]float32)
-
-	trainData := getData()
-
-	var test = " Chinese Chinese Chinese Tokyo Japan"
+	res := naiveBasie(getData(), " Chinese Chinese Chinese Tokyo Japan")
+	fmt.Println(res)
 
 }
