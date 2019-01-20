@@ -64,7 +64,6 @@ func naiveBasie(data []string, test string) map[byte]float32 {
 		}
 	}
 
-	fmt.Println(processedData)
 	result := make(map[byte]float32)
 
 	for nameC, countC := range classCount {
@@ -79,7 +78,17 @@ func naiveBasie(data []string, test string) map[byte]float32 {
 
 func main() {
 
-	res := naiveBasie(getData(), " Chinese Chinese Chinese Tokyo Japan")
-	fmt.Println(res)
+	//res := naiveBasie(getData(), " Chinese Chinese Chinese Tokyo Japan")
+	//fmt.Println(res)
+
+	originalData := getData()
+	for range originalData {
+		var testData = originalData[0]
+		originalData = originalData[1:]
+		res := naiveBasie(originalData, testData[1:])
+		fmt.Println(testData[0], res)
+
+		originalData = append(originalData, testData)
+	}
 
 }
