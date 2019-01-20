@@ -18,6 +18,20 @@ func mapSum(mapArray map[string]byte) byte {
 	return sum
 }
 
+func getMax(data map[byte]float32) byte {
+	var name byte
+	var max float32
+
+	for key, value := range data {
+		if value > max {
+			name = key
+			max = value
+		}
+	}
+
+	return name
+}
+
 func getData() []string {
 
 	var train []string
@@ -86,7 +100,7 @@ func main() {
 		var testData = originalData[0]
 		originalData = originalData[1:]
 		res := naiveBasie(originalData, testData[1:])
-		fmt.Println(testData[0], res)
+		fmt.Println(testData[0], res, getMax(res))
 
 		originalData = append(originalData, testData)
 	}
