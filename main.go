@@ -96,13 +96,36 @@ func main() {
 	//fmt.Println(res)
 
 	originalData := getData()
+
+	var tp, fp, tn, fn int
+
 	for range originalData {
 		var testData = originalData[0]
 		originalData = originalData[1:]
 		res := naiveBasie(originalData, testData[1:])
-		fmt.Println(testData[0], res, getMax(res))
+
+		if getMax(res) == 'c' {
+			if testData[0] == 'c' {
+				tp++
+			} else {
+				fp++
+			}
+		} else {
+			if testData[0] == 'j' {
+				tn++
+			} else {
+				fn++
+			}
+		}
 
 		originalData = append(originalData, testData)
 	}
+
+	recall := float32(tp) / float32(tp+fn)
+	precision := float32(tp) / float32(tp+fp)
+
+	fmt.Println(`Recall:     `, recall)
+	fmt.Println(`Precision:  `, precision)
+	fmt.Println(`F1-measure: `, float32(2*recall*precision)/float32(recall+precision))
 
 }

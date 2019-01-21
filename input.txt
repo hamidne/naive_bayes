@@ -1,4 +1,10 @@
 c Chinese Beijing Chinese
 c Chinese Chinese Shanghai
 c Chinese Macao
+c Beijing Macao
+c Shanghai Shanghai
 j Tokyo Japan Chinese
+j Chinese Japan
+j Tehran Japan Chinese
+j Tokyo Japan Chinese
+j Tehran Chinese
